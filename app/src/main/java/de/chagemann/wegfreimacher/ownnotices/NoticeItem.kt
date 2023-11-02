@@ -1,4 +1,4 @@
-package de.chagemann.wegfreimacher
+package de.chagemann.wegfreimacher.ownnotices
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -18,9 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.chagemann.wegfreimacher.R
 import de.chagemann.wegfreimacher.data.NoticeDto
 import de.chagemann.wegfreimacher.ui.theme.WegfreimacherTheme
-
 
 @Composable
 fun NoticeItem(notice: NoticeDto) {
@@ -43,7 +43,7 @@ fun NoticeItemStatusLabel(status: NoticeDto.NoticeStatus) {
     Box(
         modifier = Modifier.background(
             color = status.backgroundColor,
-            shape = MaterialTheme.shapes.small
+            shape = MaterialTheme.shapes.extraSmall
         )
     ) {
         Text(

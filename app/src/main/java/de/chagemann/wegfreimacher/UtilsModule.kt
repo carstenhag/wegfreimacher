@@ -1,12 +1,18 @@
-package de.chagemann.wegfreimacher.data
+package de.chagemann.wegfreimacher
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import de.chagemann.wegfreimacher.Constants
+import de.chagemann.wegfreimacher.data.IWegliService
+import de.chagemann.wegfreimacher.data.PrivateWegliApi
+import de.chagemann.wegfreimacher.data.PublicWegliApi
+import de.chagemann.wegfreimacher.data.WegliService
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.ConnectionSpec
@@ -87,8 +93,15 @@ class UtilsModule {
             .build()
             .create(PrivateWegliApi::class.java)
     }
+
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext appContext: Context): SharedPreferences {
+        val sharedPreferencesName = "wegfreimacher"
+        return appContext.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
+    }
 }
 
+@Suppress("unused")
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class UtilsBindsModule {

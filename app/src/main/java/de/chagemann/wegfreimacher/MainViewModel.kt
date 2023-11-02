@@ -5,9 +5,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.chagemann.wegfreimacher.data.ChargeDto
 import de.chagemann.wegfreimacher.data.IWegliService
 import de.chagemann.wegfreimacher.data.NoticeDto
+import de.chagemann.wegfreimacher.data.WegliService
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,20 +24,33 @@ class MainViewModel @Inject constructor(
 
     data class ViewState(
         val availableCharges: ImmutableList<ChargeDto> = persistentListOf(),
-        val ownNotices: ImmutableList<NoticeDto> = persistentListOf(),
-    )
-
-    suspend fun loadCharges() {
-        val charges = wegliService.getAllCharges() ?: listOf()
-        _viewState.update {
-            it.copy(availableCharges = charges.toImmutableList())
+        val ownNoticesState: OwnNoticesState? = null,
+        val isOwnNoticesLoading: Boolean = false,
+    ) {
+        sealed class OwnNoticesState {
+            data class Data(val notices: PersistentList<NoticeDto>): OwnNoticesState()
         }
     }
 
     suspend fun loadOwnNotices() {
-        val notices = wegliService.getOwnNotices() ?: listOf()
-        _viewState.update {
-            it.copy(ownNotices = notices.toImmutableList())
+        _viewState.update { it.copy(isOwnNoticesLoading = true) }
+        val notices = wegliService.getOwnNotices()
+        _viewState.update { it.copy(isOwnNoticesLoading = false) }
+
+        when (notices) {
+            is WegliService.OwnNoticesResult.GenericError -> {
+                // todo: trigger error event
+                println("WegliService.OwnNoticesResult.GenericError")
+            }
+            is WegliService.OwnNoticesResult.NoApiKeySpecifiedError -> {
+                // todo: trigger error event
+                println("WegliService.OwnNoticesResult.NoApiKeySpecifiedError")
+            }
+            is WegliService.OwnNoticesResult.Success -> {
+                _viewState.update {
+                    it.copy(ownNoticesState = ViewState.OwnNoticesState.Data(notices.ownNotices))
+                }
+            }
         }
     }
 }

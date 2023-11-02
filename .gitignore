@@ -281,6 +281,7 @@ obj/
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
 .idea/uiDesigner.xml
+.idea/inspectionProfiles/Project_Default.xml
 
 # Below 2 lines added manually for this project
 .idea/.gitignore

@@ -22,7 +22,7 @@ data class NoticeDto(
     @SerialName("date") val date: String? = null,
     @SerialName("duration") val duration: Int? = null,
     @SerialName("severity") val severity: Int? = null,
-    @SerialName("photos") val photos: List<Photo> = listOf(),
+    @SerialName("photos") val photos: List<PhotoDto> = listOf(),
 
     @SerialName("created_at")
     @Serializable(with = InstantSerializer::class)
