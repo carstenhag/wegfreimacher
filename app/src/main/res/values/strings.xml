@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Wegfreimacher</string>
+    <string name="notice_status_open">Open</string>
+    <string name="notice_status_disabled">Disabled</string>
+    <string name="notice_status_analyzing">Analyzing</string>
+    <string name="notice_status_shared">Shared</string>
+</resources>
