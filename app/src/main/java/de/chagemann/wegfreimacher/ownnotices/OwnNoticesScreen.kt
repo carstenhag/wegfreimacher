@@ -14,17 +14,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.chagemann.wegfreimacher.MainViewModel
 
 @Composable
 fun OwnNoticesScreen(
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: OwnNoticesViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val state = viewModel.viewState.collectAsState()
     val noticesState = state.value.ownNoticesState
-    LaunchedEffect(key1 = "") {
+    LaunchedEffect("") {
         viewModel.loadOwnNotices()
     }
 
@@ -38,13 +39,18 @@ fun OwnNoticesScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                if (noticesState is MainViewModel.ViewState.OwnNoticesState.Data) {
+                if (noticesState is OwnNoticesViewModel.ViewState.OwnNoticesState.Data) {
                     items(
                         items = noticesState.notices,
                         key = { it.hashCode() },
                         contentType = { "Notice Item" }
                     ) { notice ->
-                        NoticeItem(notice)
+                        NoticeItem(
+                            notice = notice,
+                            onItemClicked = {
+                                viewModel.openNotice(context, notice.token)
+                            }
+                        )
                     }
                 }
             }

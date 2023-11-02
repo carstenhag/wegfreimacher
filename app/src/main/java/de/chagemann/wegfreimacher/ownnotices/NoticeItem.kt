@@ -2,6 +2,7 @@ package de.chagemann.wegfreimacher.ownnotices
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,9 +24,17 @@ import de.chagemann.wegfreimacher.data.NoticeDto
 import de.chagemann.wegfreimacher.ui.theme.WegfreimacherTheme
 
 @Composable
-fun NoticeItem(notice: NoticeDto) {
+fun NoticeItem(
+    notice: NoticeDto,
+    onItemClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable {
+                onItemClicked()
+            },
         colors = CardDefaults.cardColors()
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
@@ -76,6 +85,9 @@ val NoticeDto.NoticeStatus.textLabelRes: Int
 fun NoticeItemPreview() {
     WegfreimacherTheme {
         val noticeDto = NoticeDto(status = NoticeDto.NoticeStatus.OPEN, registration = "Test")
-        NoticeItem(notice = noticeDto)
+        NoticeItem(
+            notice = noticeDto,
+            onItemClicked = {}
+        )
     }
 }

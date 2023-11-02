@@ -83,6 +83,8 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
     implementation("androidx.navigation:navigation-compose:$navVersion")
 
+    implementation("androidx.browser:browser:1.6.0")
+
     implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")

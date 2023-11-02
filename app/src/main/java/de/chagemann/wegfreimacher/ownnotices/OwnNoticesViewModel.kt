@@ -1,7 +1,9 @@
-package de.chagemann.wegfreimacher
+package de.chagemann.wegfreimacher.ownnotices
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.chagemann.wegfreimacher.BrowserLauncher
 import de.chagemann.wegfreimacher.data.ChargeDto
 import de.chagemann.wegfreimacher.data.IWegliService
 import de.chagemann.wegfreimacher.data.NoticeDto
@@ -15,8 +17,9 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    private val wegliService: IWegliService
+class OwnNoticesViewModel @Inject constructor(
+    private val wegliService: IWegliService,
+    private val browserLauncher: BrowserLauncher,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(ViewState())
@@ -52,5 +55,10 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun openNotice(context: Context, token: String?) {
+        if (token == null) return
+        browserLauncher.openNoticeDetails(context, token)
     }
 }
