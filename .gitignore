@@ -282,6 +282,8 @@ obj/
 .idea/dynamic.xml
 .idea/uiDesigner.xml
 .idea/inspectionProfiles/Project_Default.xml
+.idea/deploymentTargetDropDown.xml
+.idea/migrations.xml
 
 # Below 2 lines added manually for this project
 .idea/.gitignore
