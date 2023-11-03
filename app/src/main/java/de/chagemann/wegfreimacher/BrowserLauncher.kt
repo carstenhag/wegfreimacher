@@ -18,7 +18,7 @@ class BrowserLauncher @Inject constructor() {
 
     fun openUserProfile(context: Context) {
         val intent = CustomTabsIntent.Builder().build()
-        val url = "$wegliBaseUrl/profile"
+        val url = "$wegliBaseUrl/user"
         intent.launchUrl(context, Uri.parse(url))
     }
 }
