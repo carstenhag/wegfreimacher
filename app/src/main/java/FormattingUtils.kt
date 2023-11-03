@@ -1,13 +1,14 @@
 package de.chagemann.wegfreimacher
 
-import java.text.SimpleDateFormat
 import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import javax.inject.Inject
 
 class FormattingUtils @Inject constructor() {
-    private val dayMonthYearFormatter = SimpleDateFormat.getDateInstance()
+    private val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
 
     fun formatDayMonthYear(zonedDateTime: ZonedDateTime): String {
-        return dayMonthYearFormatter.format(zonedDateTime)
+        return dateFormatter.format(zonedDateTime)
     }
 }
