@@ -99,6 +99,11 @@ class UtilsModule {
         val sharedPreferencesName = "wegfreimacher"
         return appContext.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
     }
+
+    @Provides
+    fun provideFormattingUtils(): FormattingUtils {
+        return FormattingUtils()
+    }
 }
 
 @Suppress("unused")

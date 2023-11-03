@@ -1,14 +1,16 @@
 package de.chagemann.wegfreimacher.data
 
+import de.chagemann.wegfreimacher.FormattingUtils
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.Instant
+import java.time.ZoneId
 
 // Notice aka Meldung
 @Serializable
 data class NoticeDto(
     @SerialName("token") val token: String? = null,
-    @SerialName("status") val status: NoticeStatus,
+    @SerialName("status") val status: StatusDto,
     @SerialName("street") val street: String? = null,
     @SerialName("city") val city: String? = null,
     @SerialName("zip") val zipCode: String? = null,
@@ -42,8 +44,29 @@ data class NoticeDto(
     @SerialName("expired_eco") val expiredEco: Boolean? = null,
     @SerialName("over_2_8_tons") val over2Point8Tons: Boolean? = null
 ) {
+    fun toBusinessObject(formattingUtils: FormattingUtils): Notice? {
+        if (token == null || createdAt == null) return null
+
+        val formattedCreatedAt = formattingUtils.formatDayMonthYear(
+            createdAt.atZone(ZoneId.systemDefault())
+        )
+        val formattedSentAt = sentAt?.let {
+            formattingUtils.formatDayMonthYear(
+                sentAt.atZone(ZoneId.systemDefault())
+            )
+        }
+
+        return Notice(
+            token,
+            registration,
+            formattedCreatedAt,
+            formattedSentAt,
+            status.toBusinessObject(),
+        )
+    }
+
     @Serializable
-    enum class NoticeStatus {
+    enum class StatusDto {
         @SerialName("open")
         OPEN,
 
@@ -54,6 +77,13 @@ data class NoticeDto(
         ANALYZING,
 
         @SerialName("shared")
-        SHARED,
+        SHARED, ;
+
+        fun toBusinessObject() = when (this) {
+            OPEN -> Notice.Status.Open
+            DISABLED -> Notice.Status.Disabled
+            ANALYZING -> Notice.Status.Analyzing
+            SHARED -> Notice.Status.Shared
+        }
     }
 }

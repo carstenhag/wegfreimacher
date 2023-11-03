@@ -1,5 +1,6 @@
 package de.chagemann.wegfreimacher.data
 
+import de.chagemann.wegfreimacher.FormattingUtils
 import de.chagemann.wegfreimacher.settings.SettingsRepository
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -9,6 +10,7 @@ class WegliService @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val publicWegliApi: PublicWegliApi,
     private val privateWegliApi: PrivateWegliApi,
+    private val formattingUtils: FormattingUtils,
 ) : IWegliService {
 
     override suspend fun getAllCharges(): List<ChargeDto>? {
@@ -28,7 +30,12 @@ class WegliService @Inject constructor(
             privateWegliApi.getNotices(apiKey)
         }
         return result.fold(
-            onSuccess = { OwnNoticesResult.Success(it.toPersistentList()) },
+            onSuccess = { noticeDtoList ->
+                val noticeList = noticeDtoList.mapNotNull {
+                    it.toBusinessObject(formattingUtils)
+                }.toPersistentList()
+                OwnNoticesResult.Success(noticeList)
+            },
             onFailure = { OwnNoticesResult.GenericError }
         )
     }
@@ -36,6 +43,6 @@ class WegliService @Inject constructor(
     sealed class OwnNoticesResult {
         data object NoApiKeySpecifiedError : OwnNoticesResult()
         data object GenericError : OwnNoticesResult()
-        data class Success(val ownNotices: PersistentList<NoticeDto>) : OwnNoticesResult()
+        data class Success(val ownNotices: PersistentList<Notice>) : OwnNoticesResult()
     }
 }

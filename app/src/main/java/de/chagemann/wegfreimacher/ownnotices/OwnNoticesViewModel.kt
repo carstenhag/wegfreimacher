@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.chagemann.wegfreimacher.BrowserLauncher
 import de.chagemann.wegfreimacher.data.ChargeDto
 import de.chagemann.wegfreimacher.data.IWegliService
-import de.chagemann.wegfreimacher.data.NoticeDto
+import de.chagemann.wegfreimacher.data.Notice
 import de.chagemann.wegfreimacher.data.WegliService
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
@@ -31,7 +31,7 @@ class OwnNoticesViewModel @Inject constructor(
         val isOwnNoticesLoading: Boolean = false,
     ) {
         sealed class OwnNoticesState {
-            data class Data(val notices: PersistentList<NoticeDto>): OwnNoticesState()
+            data class Data(val notices: PersistentList<Notice>) : OwnNoticesState()
         }
     }
 

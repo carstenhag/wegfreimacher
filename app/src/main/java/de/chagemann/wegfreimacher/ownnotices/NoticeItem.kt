@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,14 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import de.chagemann.wegfreimacher.R
-import de.chagemann.wegfreimacher.data.NoticeDto
+import de.chagemann.wegfreimacher.data.Notice
+import de.chagemann.wegfreimacher.data.Notice.Status
 import de.chagemann.wegfreimacher.ui.theme.WegfreimacherTheme
 
 @Composable
 fun NoticeItem(
-    notice: NoticeDto,
+    notice: Notice,
     onItemClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -38,19 +42,38 @@ fun NoticeItem(
         colors = CardDefaults.cardColors()
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
-            NoticeItemStatusLabel(status = notice.status)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "${notice.registration} - ${notice.createdAt}",
-            )
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Column {
+                    Text(
+                        text = "Kennzeichen: ${notice.registration}",
+                    )
+                    Text(
+                        text = "Erstellt: ${notice.createdAt}",
+                    )
+                    notice.sentAt?.let {
+                        Text(
+                            text = "Übermittelt: $it",
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                NoticeItemStatusLabel(
+                    status = notice.status,
+                    modifier = Modifier
+                )
+            }
         }
     }
 }
 
 @Composable
-fun NoticeItemStatusLabel(status: NoticeDto.NoticeStatus) {
+fun NoticeItemStatusLabel(
+    status: Status,
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier.background(
+        modifier = modifier.background(
             color = status.backgroundColor,
             shape = MaterialTheme.shapes.extraSmall
         )
@@ -63,30 +86,56 @@ fun NoticeItemStatusLabel(status: NoticeDto.NoticeStatus) {
     }
 }
 
-val NoticeDto.NoticeStatus.backgroundColor: Color
+val Status.backgroundColor: Color
     get() = when (this) {
-        NoticeDto.NoticeStatus.OPEN -> Color.DarkGray
-        NoticeDto.NoticeStatus.DISABLED -> Color.Red
-        NoticeDto.NoticeStatus.ANALYZING -> Color.Green
-        NoticeDto.NoticeStatus.SHARED -> Color.Blue
+        Status.Open -> Color.DarkGray
+        Status.Disabled -> Color.Red
+        Status.Analyzing -> Color.Green
+        Status.Shared -> Color.Blue
     }
 
 @get:StringRes
-val NoticeDto.NoticeStatus.textLabelRes: Int
+val Status.textLabelRes: Int
     get() = when (this) {
-        NoticeDto.NoticeStatus.OPEN -> R.string.notice_status_open
-        NoticeDto.NoticeStatus.DISABLED -> R.string.notice_status_disabled
-        NoticeDto.NoticeStatus.ANALYZING -> R.string.notice_status_analyzing
-        NoticeDto.NoticeStatus.SHARED -> R.string.notice_status_shared
+        Status.Open -> R.string.notice_status_open
+        Status.Disabled -> R.string.notice_status_disabled
+        Status.Analyzing -> R.string.notice_status_analyzing
+        Status.Shared -> R.string.notice_status_shared
     }
+
+private class NoticeItemProvider: PreviewParameterProvider<Notice> {
+    private val baseNotice = Notice(
+        token = "123",
+        registration = "M DE 1234",
+        "11-03-2023",
+        null,
+        status = Status.Open,
+    )
+    override val values: Sequence<Notice>
+        get() = sequenceOf(
+            baseNotice,
+            baseNotice.copy(
+                status = Status.Analyzing
+            ),
+            baseNotice.copy(
+                status = Status.Disabled
+            ),
+            baseNotice.copy(
+                registration = "KFX 231",
+                sentAt = "14-04-2023",
+                status = Status.Shared
+            )
+        )
+}
 
 @Composable
 @Preview(showBackground = true)
-fun NoticeItemPreview() {
+fun NoticeItemPreview(
+    @PreviewParameter(NoticeItemProvider::class) notice: Notice
+) {
     WegfreimacherTheme {
-        val noticeDto = NoticeDto(status = NoticeDto.NoticeStatus.OPEN, registration = "Test")
         NoticeItem(
-            notice = noticeDto,
+            notice = notice,
             onItemClicked = {}
         )
     }
