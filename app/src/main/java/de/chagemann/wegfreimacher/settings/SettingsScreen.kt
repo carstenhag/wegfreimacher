@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 
 
@@ -21,6 +22,8 @@ fun SettingsScreen(
     vm: SettingsViewModel = hiltViewModel()
 ) {
     val state = vm.viewState.collectAsState()
+    val context = LocalContext.current
+
     val wegliApiKeyInput = remember { mutableStateOf("") }
     LaunchedEffect(key1 = "") {
         val apiKey = vm.retrieveApiKey() ?: return@LaunchedEffect
@@ -43,6 +46,13 @@ fun SettingsScreen(
             }
         ) {
             Text(text = "Save API Key")
+        }
+        Button(
+            onClick = {
+                vm.openUserProfile(context)
+            }
+        ) {
+            Text(text = "Open weg.li profile to copy API key")
         }
     }
 }

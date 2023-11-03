@@ -15,4 +15,10 @@ class BrowserLauncher @Inject constructor() {
         val url = "${wegliBaseUrl}/notices/$noticeToken"
         intent.launchUrl(context, Uri.parse(url))
     }
+
+    fun openUserProfile(context: Context) {
+        val intent = CustomTabsIntent.Builder().build()
+        val url = "$wegliBaseUrl/profile"
+        intent.launchUrl(context, Uri.parse(url))
+    }
 }
