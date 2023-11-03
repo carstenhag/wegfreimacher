@@ -86,11 +86,12 @@ fun NoticeItemStatusLabel(
     }
 }
 
+// TODO: Improve this
 val Status.backgroundColor: Color
     get() = when (this) {
         Status.Open -> Color.DarkGray
         Status.Disabled -> Color.Red
-        Status.Analyzing -> Color.Green
+        Status.Analyzing -> Color(100, 55, 100)
         Status.Shared -> Color.Blue
     }
 

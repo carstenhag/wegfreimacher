@@ -3,6 +3,7 @@ package de.chagemann.wegfreimacher
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -13,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.chagemann.wegfreimacher.ownnotices.OwnNoticesScreen
+import de.chagemann.wegfreimacher.selectimages.SelectImagesScreen
 import de.chagemann.wegfreimacher.settings.SettingsScreen
 import de.chagemann.wegfreimacher.start.StartScreen
 import de.chagemann.wegfreimacher.ui.theme.WegfreimacherTheme
@@ -43,7 +45,8 @@ fun ScreenNavHost() {
             composable(route = Screen.Start.name) {
                 StartScreen(
                     onOpenOwnNoticesClicked = { navController.navigate(route = Screen.OwnNotices.name) },
-                    onOpenSettingsClicked = { navController.navigate(route = Screen.Settings.name) }
+                    onOpenSettingsClicked = { navController.navigate(route = Screen.Settings.name) },
+                    onOpenSelectImagesClicked = { navController.navigate(route = Screen.SelectImages.name) },
                 )
             }
 
@@ -54,6 +57,10 @@ fun ScreenNavHost() {
             composable(route = Screen.Settings.name) {
                 SettingsScreen()
             }
+
+            composable(route = Screen.SelectImages.name) {
+                SelectImagesScreen()
+            }
         }
     }
 }
@@ -61,5 +68,6 @@ fun ScreenNavHost() {
 enum class Screen {
     Start,
     OwnNotices,
-    Settings
+    Settings,
+    SelectImages,
 }

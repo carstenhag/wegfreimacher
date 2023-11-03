@@ -19,14 +19,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    vm: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    val state = vm.viewState.collectAsState()
+    val state = viewModel.viewState.collectAsState()
     val context = LocalContext.current
 
     val wegliApiKeyInput = remember { mutableStateOf("") }
     LaunchedEffect(key1 = "") {
-        val apiKey = vm.retrieveApiKey() ?: return@LaunchedEffect
+        val apiKey = viewModel.retrieveApiKey() ?: return@LaunchedEffect
         wegliApiKeyInput.value = apiKey
     }
 
@@ -42,14 +42,14 @@ fun SettingsScreen(
         )
         Button(
             onClick = {
-                vm.updateApiKey(wegliApiKeyInput.value)
+                viewModel.updateApiKey(wegliApiKeyInput.value)
             }
         ) {
             Text(text = "Save API Key")
         }
         Button(
             onClick = {
-                vm.openUserProfile(context)
+                viewModel.openUserProfile(context)
             }
         ) {
             Text(text = "Open weg.li profile to copy API key")
