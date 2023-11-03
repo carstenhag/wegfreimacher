@@ -41,7 +41,7 @@ fun NoticeItem(
             },
         colors = CardDefaults.cardColors()
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp)) {
             Spacer(modifier = Modifier.height(4.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column {
@@ -105,28 +105,8 @@ val Status.textLabelRes: Int
     }
 
 private class NoticeItemProvider: PreviewParameterProvider<Notice> {
-    private val baseNotice = Notice(
-        token = "123",
-        registration = "M DE 1234",
-        "11-03-2023",
-        null,
-        status = Status.Open,
-    )
     override val values: Sequence<Notice>
-        get() = sequenceOf(
-            baseNotice,
-            baseNotice.copy(
-                status = Status.Analyzing
-            ),
-            baseNotice.copy(
-                status = Status.Disabled
-            ),
-            baseNotice.copy(
-                registration = "KFX 231",
-                sentAt = "14-04-2023",
-                status = Status.Shared
-            )
-        )
+        get() = Notice.exampleData.asSequence()
 }
 
 @Composable

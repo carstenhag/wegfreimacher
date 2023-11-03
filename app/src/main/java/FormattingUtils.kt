@@ -6,7 +6,7 @@ import java.time.format.FormatStyle
 import javax.inject.Inject
 
 class FormattingUtils @Inject constructor() {
-    private val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    private val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
 
     fun formatDayMonthYear(zonedDateTime: ZonedDateTime): String {
         return dateFormatter.format(zonedDateTime)

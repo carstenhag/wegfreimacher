@@ -17,6 +17,7 @@ class SettingsViewModel @Inject constructor(
     private val _viewState = MutableStateFlow(ViewState(Any()))
     val viewState = _viewState.asStateFlow()
 
+    // TOOD: Refactor this, prob not best practice
     fun retrieveApiKey(): String? {
         return settingsRepository.wegliApiKey
     }

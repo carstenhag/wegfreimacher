@@ -15,8 +15,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.chagemann.wegfreimacher.data.Notice
+import de.chagemann.wegfreimacher.ownnotices.OwnNoticesViewModel.ViewState
+import de.chagemann.wegfreimacher.ui.theme.WegfreimacherTheme
 
 @Composable
 fun OwnNoticesScreen(
@@ -24,11 +30,24 @@ fun OwnNoticesScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.viewState.collectAsState()
-    val noticesState = state.value.ownNoticesState
     LaunchedEffect("") {
         viewModel.loadOwnNotices()
     }
 
+    OwnNoticesContent(
+        state = state.value,
+        onItemTapped = { noticeToken ->
+            viewModel.openNotice(context, noticeToken)
+        }
+    )
+}
+
+@Composable
+fun OwnNoticesContent(
+    state: ViewState,
+    onItemTapped: (noticeToken: String) -> Unit
+) {
+    val noticesState = state.ownNoticesState
     Surface(
         modifier = Modifier,
         color = MaterialTheme.colorScheme.background
@@ -39,7 +58,7 @@ fun OwnNoticesScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                if (noticesState is OwnNoticesViewModel.ViewState.OwnNoticesState.Data) {
+                if (noticesState is ViewState.OwnNoticesState.Data) {
                     items(
                         items = noticesState.notices,
                         key = { it.hashCode() },
@@ -47,18 +66,41 @@ fun OwnNoticesScreen(
                     ) { notice ->
                         NoticeItem(
                             notice = notice,
-                            onItemClicked = {
-                                viewModel.openNotice(context, notice.token)
-                            }
+                            onItemClicked = { onItemTapped(notice.token) }
                         )
                     }
                 }
             }
             Box(modifier = Modifier.fillMaxSize()) {
-                if (state.value.isOwnNoticesLoading) {
+                if (state.isOwnNoticesLoading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
         }
+    }
+}
+
+private class OwnNoticesViewStateProvider : PreviewParameterProvider<ViewState> {
+    val dataState = ViewState(
+        ownNoticesState = ViewState.OwnNoticesState.Data(Notice.exampleData)
+    )
+    val loadingState = ViewState(
+        isOwnNoticesLoading = true
+    )
+
+    override val values: Sequence<ViewState>
+        get() = sequenceOf(
+            dataState,
+            loadingState
+        )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun OwnNoticesContentPreview(
+    @PreviewParameter(OwnNoticesViewStateProvider::class) viewState: ViewState
+) {
+    WegfreimacherTheme {
+        OwnNoticesContent(state = viewState, onItemTapped = {})
     }
 }
