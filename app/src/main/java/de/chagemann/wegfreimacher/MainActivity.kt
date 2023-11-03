@@ -1,9 +1,13 @@
 package de.chagemann.wegfreimacher
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts.PickMultipleVisualMedia
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -22,11 +26,21 @@ import de.chagemann.wegfreimacher.ui.theme.WegfreimacherTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val pickMediaLauncher = registerForActivityResult(PickMultipleVisualMedia()) { uri ->
+        // Callback is invoked after the user selects a media item or closes the
+        // photo picker.
+        if (uri != null) {
+            Log.d("PhotoPicker", "Selected URI: $uri")
+        } else {
+            Log.d("PhotoPicker", "No media selected")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             WegfreimacherTheme {
-                ScreenNavHost()
+                ScreenNavHost(pickMediaLauncher)
             }
         }
     }
@@ -34,7 +48,9 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenNavHost() {
+fun ScreenNavHost(
+    pickMediaLauncher: ActivityResultLauncher<PickVisualMediaRequest>
+) {
     Scaffold { innerPadding ->
         val navController = rememberNavController()
         NavHost(
@@ -59,7 +75,12 @@ fun ScreenNavHost() {
             }
 
             composable(route = Screen.SelectImages.name) {
-                SelectImagesScreen()
+                SelectImagesScreen(
+                    onSelectImagesClicked = {
+                        // Launch the photo picker and let the user choose only images.
+                        pickMediaLauncher.launch(PickVisualMediaRequest(PickVisualMedia.ImageAndVideo))
+                    }
+                )
             }
         }
     }
