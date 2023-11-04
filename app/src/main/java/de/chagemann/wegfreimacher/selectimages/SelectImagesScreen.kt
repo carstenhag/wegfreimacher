@@ -1,5 +1,8 @@
 package de.chagemann.wegfreimacher.selectimages
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,20 +13,37 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.chagemann.wegfreimacher.ui.theme.WegfreimacherTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun SelectImagesScreen(
     viewModel: SelectImagesViewModel = hiltViewModel(),
-    onSelectImagesClicked: () -> Unit
 ) {
-    SelectImagesContent(onSelectImagesClicked = onSelectImagesClicked)
+    val context = LocalContext.current
+    val contentResolver = context.contentResolver
+    val coroutineScope = rememberCoroutineScope()
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia()
+    ) { uriList ->
+        if (uriList.isEmpty()) return@rememberLauncherForActivityResult
+
+        coroutineScope.launch {
+            viewModel.userHasSelectedImages(contentResolver, uriList)
+        }
+    }
+
+    SelectImagesContent(onSelectImagesClicked = {
+        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+    })
 }
 
 @Composable

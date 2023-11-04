@@ -1,9 +1,17 @@
 package de.chagemann.wegfreimacher.data
 
+import android.content.ContentResolver
+import android.net.Uri
+import android.provider.OpenableColumns
 import de.chagemann.wegfreimacher.FormattingUtils
+import de.chagemann.wegfreimacher.selectimages.ImageUploadContainerDto
+import de.chagemann.wegfreimacher.selectimages.ImageUploadDto
+import de.chagemann.wegfreimacher.selectimages.md5Hash
 import de.chagemann.wegfreimacher.settings.SettingsRepository
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 class WegliService @Inject constructor(
@@ -38,6 +46,68 @@ class WegliService @Inject constructor(
             },
             onFailure = { OwnNoticesResult.GenericError }
         )
+    }
+
+    override suspend fun uploadImages(
+        contentResolver: ContentResolver,
+        uriList: List<Uri>,
+    ) {
+        val apiKey = settingsRepository.wegliApiKey ?: throw Exception() // TODO: Improve this
+
+        val imageUploadDtoList = buildImageUploadDtoList(uriList, contentResolver)
+
+        val result = runCatching {
+            privateWegliApi.requestImageUploadUrl(
+                apiKey,
+                ImageUploadContainerDto(imageUploadDtoList[0])
+            )
+        }
+        val response = result.getOrNull()
+            ?: throw Exception("failed to request upload URL")
+
+        val mediaType = imageUploadDtoList[0].mimeType?.toMediaType()
+        val byteArray = contentResolver.openInputStream(uriList[0]).use { inputStream ->
+            inputStream?.readBytes()
+        } ?: throw Exception("failed to read data from uri")
+
+        val x = privateWegliApi.uploadImage(
+            response.directUpload.url,
+            response.directUpload.headers,
+            byteArray.toRequestBody(mediaType, 0, byteArray.size)
+        )
+        val y = 1
+    }
+
+    private fun buildImageUploadDtoList(
+        uriList: List<Uri>,
+        contentResolver: ContentResolver
+    ) = uriList.mapNotNull { uri ->
+        val fileSizeNamePair = contentResolver.query(
+            uri, null, null, null, null
+        )?.let {
+            it.moveToFirst()
+
+            val fileNameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            val fileName = it.getString(fileNameIndex)
+
+            val sizeIndex = it.getColumnIndex(OpenableColumns.SIZE)
+            val fileSize = it.getLong(sizeIndex)
+
+            it.close()
+            fileName to fileSize
+        }
+        if (fileSizeNamePair == null) return@mapNotNull null
+
+        val fileName = fileSizeNamePair.first
+        val sizeInBytes = fileSizeNamePair.second
+
+        val byteArray = contentResolver.openInputStream(uri).use { inputStream ->
+            inputStream?.readBytes()
+        } ?: return@mapNotNull null
+
+        val md5Hash = md5Hash(byteArray)
+        val contentType = contentResolver.getType(uri)
+        ImageUploadDto(fileName, sizeInBytes, md5Hash, contentType)
     }
 
     sealed class OwnNoticesResult {

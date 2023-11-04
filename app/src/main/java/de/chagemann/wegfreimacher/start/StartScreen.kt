@@ -30,7 +30,7 @@ fun StartScreen(
             Text("Settings")
         }
         Button(onClick = onOpenSelectImagesClicked) {
-            Text("Select Images")
+            Text("Meldung erstellen")
         }
     }
 }
