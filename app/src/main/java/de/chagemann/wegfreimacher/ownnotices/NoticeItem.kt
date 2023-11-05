@@ -45,16 +45,14 @@ fun NoticeItem(
             Spacer(modifier = Modifier.height(4.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column {
+                    notice.registration?.let {
+                        Text(text = stringResource(R.string.notice_item_registration, it))
+                    }
                     Text(
-                        text = "Kennzeichen: ${notice.registration}",
-                    )
-                    Text(
-                        text = "Erstellt: ${notice.createdAt}",
+                        text = stringResource(R.string.notice_item_created_at, notice.createdAt),
                     )
                     notice.sentAt?.let {
-                        Text(
-                            text = "Übermittelt: $it",
-                        )
+                        Text(text = stringResource(R.string.notice_item_sent_at, it))
                     }
                 }
                 Spacer(modifier = Modifier.weight(1f))
@@ -104,7 +102,7 @@ val Status.textLabelRes: Int
         Status.Shared -> R.string.notice_status_shared
     }
 
-private class NoticeItemProvider: PreviewParameterProvider<Notice> {
+private class NoticeItemProvider : PreviewParameterProvider<Notice> {
     override val values: Sequence<Notice>
         get() = Notice.exampleData.asSequence()
 }

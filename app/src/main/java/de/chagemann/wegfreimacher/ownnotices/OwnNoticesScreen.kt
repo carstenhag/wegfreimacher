@@ -15,14 +15,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.chagemann.wegfreimacher.AppPreview
 import de.chagemann.wegfreimacher.data.Notice
 import de.chagemann.wegfreimacher.ownnotices.OwnNoticesViewModel.ViewState
 import de.chagemann.wegfreimacher.ui.theme.WegfreimacherTheme
+
+private const val noticeItemContentType = "NoticeItem"
 
 @Composable
 fun OwnNoticesScreen(
@@ -53,28 +55,37 @@ fun OwnNoticesContent(
         color = MaterialTheme.colorScheme.background
     ) {
         Box {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                if (noticesState is ViewState.OwnNoticesState.Data) {
-                    items(
-                        items = noticesState.notices,
-                        key = { it.hashCode() },
-                        contentType = { "Notice Item" }
-                    ) { notice ->
-                        NoticeItem(
-                            notice = notice,
-                            onItemClicked = { onItemTapped(notice.token) }
-                        )
-                    }
-                }
-            }
+            OwnNoticesList(noticesState, onItemTapped)
             Box(modifier = Modifier.fillMaxSize()) {
                 if (state.isOwnNoticesLoading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun OwnNoticesList(
+    noticesState: ViewState.OwnNoticesState?,
+    onItemTapped: (noticeToken: String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        if (noticesState is ViewState.OwnNoticesState.Data) {
+            items(
+                items = noticesState.notices,
+                key = { it.hashCode() },
+                contentType = { noticeItemContentType }
+            ) { notice ->
+                NoticeItem(
+                    notice = notice,
+                    onItemClicked = { onItemTapped(notice.token) }
+                )
             }
         }
     }
@@ -95,7 +106,7 @@ private class OwnNoticesViewStateProvider : PreviewParameterProvider<ViewState> 
         )
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 fun OwnNoticesContentPreview(
     @PreviewParameter(OwnNoticesViewStateProvider::class) viewState: ViewState

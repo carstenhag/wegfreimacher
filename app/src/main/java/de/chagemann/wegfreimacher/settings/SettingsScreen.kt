@@ -14,8 +14,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.chagemann.wegfreimacher.AppPreview
+import de.chagemann.wegfreimacher.R
 import de.chagemann.wegfreimacher.ui.theme.WegfreimacherTheme
 
 @Composable
@@ -49,7 +51,7 @@ fun SettingsContent(
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Settings!")
 
-        Text("API Key Input")
+        Text(text = stringResource(R.string.settings_api_key_label))
         TextField(
             value = wegliApiKeyInput.value,
             onValueChange = {
@@ -59,17 +61,17 @@ fun SettingsContent(
         Button(
             onClick = { onSaveApiKeyClicked(wegliApiKeyInput.value) }
         ) {
-            Text(text = "Save API Key")
+            Text(text = stringResource(R.string.settings_api_key_save))
         }
         Button(
             onClick = onOpenUserProfile
         ) {
-            Text(text = "Open weg.li profile to copy API key")
+            Text(text = stringResource(R.string.settings_api_key_open_profile))
         }
     }
 }
 
-@Preview(showBackground = true)
+@AppPreview
 @Composable
 fun SettingsContentPreview() {
     WegfreimacherTheme {

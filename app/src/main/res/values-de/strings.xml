@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wegfreimacher</string>
+    <string name="notice_status_open">Offen</string>
+    <string name="notice_status_disabled">Deaktiviert</string>
+    <string name="notice_status_analyzing">In Analyse</string>
+    <string name="notice_status_shared">Gemeldet</string>
+    <string name="start_create_invoice">Meldung erstellen</string>
+    <string name="start_open_own_notices">"Meldungen ansehen "</string>
+    <string name="start_open_settings">Einstellungen</string>
+    <string name="notice_item_registration">Kennzeichen: %1$s</string>
+    <string name="notice_item_created_at">Erstellt: %1$s</string>
+    <string name="notice_item_sent_at">Übermittelt: %1$s</string>
+    <string name="settings_api_key_label">API Key-Eingabe</string>
+    <string name="settings_api_key_save">API Key Speichern</string>
+    <string name="settings_api_key_open_profile">Profil auf weg.li öffnen um API Key zu kopieren</string>
+    <string name="notice_creation_steps_title">Schritte zur Erstellung einer Meldung:</string>
+    <string name="notice_creation_steps_1">1.\t\tFotos auswählen &amp; hochladen</string>
+    <string name="notice_creation_steps_2">2.\t\tTatbestand auswählen, Daten ausfüllen</string>
+    <string name="notice_creation_steps_3">3.\t\tMeldung überprüfen und einreichen</string>
+    <string name="select_images_select_button">Bilder auswählen</string>
+</resources>

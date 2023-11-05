@@ -4,4 +4,18 @@
     <string name="notice_status_disabled">Disabled</string>
     <string name="notice_status_analyzing">Analyzing</string>
     <string name="notice_status_shared">Shared</string>
+    <string name="start_create_invoice">Create notice</string>
+    <string name="start_open_own_notices">Own notices</string>
+    <string name="start_open_settings">Settings</string>
+    <string name="notice_item_registration">Kennzeichen: %1$s</string>
+    <string name="notice_item_created_at">Created: %1$s</string>
+    <string name="notice_item_sent_at">Shared: %1$s</string>
+    <string name="settings_api_key_label">API Key Input</string>
+    <string name="settings_api_key_save">Save API Key</string>
+    <string name="settings_api_key_open_profile">Open weg.li profile to copy API key</string>
+    <string name="notice_creation_steps_title">Steps to create a notice:</string>
+    <string name="notice_creation_steps_1">1.\t\tSelect &amp; upload images</string>
+    <string name="notice_creation_steps_2">2.\t\tSelect charge, fill out form</string>
+    <string name="notice_creation_steps_3">3.\t\tVerify &amp; submit notice</string>
+    <string name="select_images_select_button">Select images</string>
 </resources>
