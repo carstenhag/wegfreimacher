@@ -9,3 +9,11 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    groups:
+      kotlin:
+        patterns:
+          - "com.google.devtools.ksp"
+          - "androidx.compose.compiler*"
+          - "org.jetbrains.kotlin.android"
+          - "plugin.serialization"
+
