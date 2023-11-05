@@ -10,7 +10,7 @@ import retrofit2.http.Header
 import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 import retrofit2.http.PUT
-import retrofit2.http.Path
+import retrofit2.http.Url
 
 interface PrivateWegliApi {
 
@@ -25,9 +25,9 @@ interface PrivateWegliApi {
         @Body imageUploadContainerDto: ImageUploadContainerDto
     ): ImageUploadRequestResponseDto
 
-    @PUT("{uploadUrl}")
+    @PUT
     suspend fun uploadImage(
-        @Path("uploadUrl") url: String,
+        @Url url: String,
         @HeaderMap headers: Map<String, String>,
         @Body body: RequestBody,
     ): Response<String>

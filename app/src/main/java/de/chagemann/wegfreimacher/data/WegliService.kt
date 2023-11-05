@@ -13,6 +13,8 @@ import kotlinx.collections.immutable.toPersistentList
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 class WegliService @Inject constructor(
     private val settingsRepository: SettingsRepository,
@@ -70,14 +72,15 @@ class WegliService @Inject constructor(
             inputStream?.readBytes()
         } ?: throw Exception("failed to read data from uri")
 
-        val x = privateWegliApi.uploadImage(
+        val uploadImageResponse = privateWegliApi.uploadImage(
             response.directUpload.url,
             response.directUpload.headers,
             byteArray.toRequestBody(mediaType, 0, byteArray.size)
         )
-        val y = 1
+        val errorBody = uploadImageResponse.errorBody()
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     private fun buildImageUploadDtoList(
         uriList: List<Uri>,
         contentResolver: ContentResolver
@@ -105,9 +108,9 @@ class WegliService @Inject constructor(
             inputStream?.readBytes()
         } ?: return@mapNotNull null
 
-        val md5Hash = md5Hash(byteArray)
+        val md5HashBase64 = Base64.encode(md5Hash(byteArray))
         val contentType = contentResolver.getType(uri)
-        ImageUploadDto(fileName, sizeInBytes, md5Hash, contentType)
+        ImageUploadDto(fileName, sizeInBytes, md5HashBase64, contentType)
     }
 
     sealed class OwnNoticesResult {

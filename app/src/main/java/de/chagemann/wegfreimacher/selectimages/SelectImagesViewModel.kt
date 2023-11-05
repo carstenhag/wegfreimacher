@@ -2,13 +2,11 @@ package de.chagemann.wegfreimacher.selectimages
 
 import android.content.ContentResolver
 import android.net.Uri
-import android.webkit.MimeTypeMap
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.chagemann.wegfreimacher.data.WegliService
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
 import javax.inject.Inject
@@ -36,18 +34,15 @@ data class ImageUploadDto(
     @SerialName("byte_size")
     val sizeInBytes: Long,
     @SerialName("checksum")
-    val md5Hash: String,
+    val md5HashBase64: String,
     @SerialName("content_type")
     val mimeType: String?,
     @SerialName("metadata")
     val metadata: Map<String, String> = mapOf()
 )
 
-fun md5Hash(byteArray: ByteArray): String {
+fun md5Hash(byteArray: ByteArray): ByteArray {
     val md = MessageDigest.getInstance("MD5")
     val bigInt = BigInteger(1, md.digest(byteArray))
-    return String.format("%032x", bigInt)
+    return bigInt.toByteArray()
 }
-
-fun File.mimeType(): String? =
-    MimeTypeMap.getSingleton().getMimeTypeFromExtension(this.extension)
