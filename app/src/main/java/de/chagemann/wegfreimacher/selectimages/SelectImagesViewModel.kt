@@ -7,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.chagemann.wegfreimacher.data.WegliService
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.math.BigInteger
 import java.security.MessageDigest
 import javax.inject.Inject
 
@@ -43,6 +42,5 @@ data class ImageUploadDto(
 
 fun md5Hash(byteArray: ByteArray): ByteArray {
     val md = MessageDigest.getInstance("MD5")
-    val bigInt = BigInteger(1, md.digest(byteArray))
-    return bigInt.toByteArray()
+    return md.digest(byteArray)
 }

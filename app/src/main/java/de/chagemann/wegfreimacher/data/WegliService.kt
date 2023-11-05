@@ -58,6 +58,7 @@ class WegliService @Inject constructor(
 
         val imageUploadDtoList = buildImageUploadDtoList(uriList, contentResolver)
 
+        // Step 1: Request Image Upload URL
         val result = runCatching {
             privateWegliApi.requestImageUploadUrl(
                 apiKey,
@@ -72,12 +73,13 @@ class WegliService @Inject constructor(
             inputStream?.readBytes()
         } ?: throw Exception("failed to read data from uri")
 
+        // Step 2: Upload image
         val uploadImageResponse = privateWegliApi.uploadImage(
             response.directUpload.url,
             response.directUpload.headers,
             byteArray.toRequestBody(mediaType, 0, byteArray.size)
         )
-        val errorBody = uploadImageResponse.errorBody()
+        val errorBody = uploadImageResponse.errorBody() // results in 403
     }
 
     @OptIn(ExperimentalEncodingApi::class)
