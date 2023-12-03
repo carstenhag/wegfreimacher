@@ -8,7 +8,7 @@ updates:
   - package-ecosystem: "gradle"
     directory: "/" # Location of package manifests
     schedule:
-      interval: "weekly"
+      interval: "daily"
     groups:
       kotlin:
         patterns:
