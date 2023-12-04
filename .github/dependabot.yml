@@ -16,4 +16,7 @@ updates:
           - "androidx.compose.compiler*"
           - "org.jetbrains.kotlin.android"
           - "plugin.serialization"
-
+      dagger:
+        patterns:
+          - "com.google.dagger"
+          - "com.google.dagger.hilt.android"
