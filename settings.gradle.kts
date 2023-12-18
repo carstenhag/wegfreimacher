@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Wegfreimacher"
+rootProject.name = "wegfreimacher"
 include(":app")

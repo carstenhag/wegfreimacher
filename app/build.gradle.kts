@@ -46,7 +46,7 @@ android {
     }
     composeOptions {
         // See https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-        kotlinCompilerExtensionVersion = "1.5.5"
+        kotlinCompilerExtensionVersion = "1.5.6"
     }
     packaging {
         resources {
@@ -59,10 +59,11 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
 
     // Compose
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    // https://developer.android.com/jetpack/compose/bom/bom-mapping
+    implementation(platform("androidx.compose:compose-bom:2023.10.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -79,16 +80,16 @@ dependencies {
     ksp("com.google.dagger:hilt-android-compiler:2.48.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
-    val navVersion = "2.7.5"
+    val navVersion = "2.7.6"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
     implementation("androidx.navigation:navigation-compose:$navVersion")
 
-    implementation("androidx.browser:browser:1.6.0")
+    implementation("androidx.browser:browser:1.7.0")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6")
+    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
     testImplementation("junit:junit:4.13.2")
 
